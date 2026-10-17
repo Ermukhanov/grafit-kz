@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRAFIT, кафе, Хромтау</title>
+<meta name="description" content="GRAFIT кафесі, Хромтау. Юрия Гагарина 35. 11:00–24:00. 2GIS 4.9.">
+<style>
+  :root {
+    --bg: #141414;
+    --bg-2: #1c1c1c;
+    --card: #202020;
+    --line: #2c2c2c;
+    --text: #f2efe9;
+    --muted: #9a958c;
+    --accent: #e8925a;
+    --accent-2: #f5b97f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- background motion ---------- */
+  .bg-glow {
+    position: fixed; inset: -20%; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(232,146,90,0.10), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba(245,185,127,0.07), transparent 45%);
+    animation: drift 24s ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    0%   { transform: translate(0,0) scale(1); }
+    100% { transform: translate(4%, -3%) scale(1.08); }
+  }
+
+  /* ---------- intro splash ---------- */
+  .splash {
+    position: fixed; inset: 0; z-index: 1000;
+    background: #0e0e0e;
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    transition: opacity .8s ease, visibility .8s;
+  }
+  .splash.hide { opacity: 0; visibility: hidden; }
+  .splash-name {
+    font-size: clamp(48px, 12vw, 120px);
+    font-weight: 800; letter-spacing: .25em; margin-right: -.25em;
+    color: var(--text);
+  }
+  .splash-name span {
+    display: inline-block; opacity: 0; transform: translateY(40px);
+    animation: letterIn .7s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .splash-name span:nth-child(1) { animation-delay: .15s; }
+  .splash-name span:nth-child(2) { animation-delay: .25s; }
+  .splash-name span:nth-child(3) { animation-delay: .35s; }
+  .splash-name span:nth-child(4) { animation-delay: .45s; }
+  .splash-name span:nth-child(5) { animation-delay: .55s; }
+  .splash-name span:nth-child(6) { animation-delay: .65s; }
+  .splash-line {
+    width: 0; height: 2px; background: var(--accent); margin-top: 22px;
+    animation: lineGrow .9s .9s ease forwards;
+  }
+  .splash-sub {
+    margin-top: 16px; font-size: 13px; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--muted); opacity: 0; animation: fadeIn .6s 1.3s forwards;
+  }
+  @keyframes letterIn { to { opacity: 1; transform: translateY(0); } }
+  @keyframes lineGrow { to { width: 180px; } }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 6%;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(20,20,20,0.6);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .brand { font-weight: 800; letter-spacing: .2em; font-size: 18px; }
+  .brand em { color: var(--accent); font-style: normal; }
+  .nav-links { display: flex; gap: 26px; font-size: 14px; color: var(--muted); }
+  .nav-links a { transition: color .25s; }
+  .nav-links a:hover { color: var(--text); }
+  @media (max-width: 640px) { .nav-links { display: none; } }
+
+  /* ---------- hero ---------- */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 120px 6% 80px; position: relative;
+  }
+  .hero::after {
+    content: ""; position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+    width: 1px; height: 80px; background: linear-gradient(var(--accent), transparent);
+  }
+  .eyebrow {
+    font-size: 12px; letter-spacing: .35em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 18px; opacity: 0; animation: fadeUp .9s 2.2s forwards;
+  }
+  .hero h1 {
+    font-size: clamp(64px, 16vw, 180px); font-weight: 800; letter-spacing: .08em;
+    line-height: .95; margin-left: .08em;
+    background: linear-gradient(100deg, var(--text) 0%, var(--text) 40%, var(--accent-2) 60%, var(--text) 80%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: fadeUp 1s 2.3s forwards, shine 8s 3.3s linear infinite;
+    opacity: 0;
+  }
+  .tagline {
+    margin-top: 22px; font-size: clamp(17px, 2.4vw, 22px); color: var(--muted);
+    opacity: 0; animation: fadeUp .9s 2.6s forwards;
+  }
+  .hero-cta {
+    margin-top: 40px; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+    opacity: 0; animation: fadeUp .9s 2.8s forwards;
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shine { to { background-position: -250% 0; } }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 26px; border-radius: 999px; font-weight: 600; font-size: 15px;
+    transition: transform .3s ease, box-shadow .3s ease, background .3s ease;
+  }
+  .btn-primary { background: var(--accent); color: #1a120c; }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(232,146,90,.3); }
+  .btn-ghost { border: 1px solid var(--line); color: var(--text); }
+  .btn-ghost:hover { transform: translateY(-3px); border-color: var(--accent); }
+
+  /* ---------- sections ---------- */
+  section { padding: 110px 6%; position: relative; }
+  .section-head { max-width: 640px; margin-bottom: 56px; }
+  .kicker {
+    font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .section-head h2 { font-size: clamp(32px, 5vw, 52px); font-weight: 700; line-height: 1.1; }
+
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  .stagger > * { opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
+  .stagger.in > * { opacity: 1; transform: translateY(0); }
+  .stagger.in > *:nth-child(1) { transition-delay: .05s; }
+  .stagger.in > *:nth-child(2) { transition-delay: .15s; }
+  .stagger.in > *:nth-child(3) { transition-delay: .25s; }
+  .stagger.in > *:nth-child(4) { transition-delay: .35s; }
+  .stagger.in > *:nth-child(5) { transition-delay: .45s; }
+  .stagger.in > *:nth-child(6) { transition-delay: .55s; }
+
+  /* ---------- about ---------- */
+  .about-grid {
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: center;
+  }
+  .about-text p { color: var(--muted); font-size: 17px; margin-bottom: 18px; }
+  .about-text p strong { color: var(--text); font-weight: 600; }
+  .rating-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 24px;
+    padding: 44px 36px; text-align: center;
+    transition: transform .4s ease, border-color .4s ease, box-shadow .4s ease;
+  }
+  .rating-card:hover { transform: translateY(-8px); border-color: var(--accent); box-shadow: 0 24px 50px rgba(0,0,0,.4); }
+  .rating-num { font-size: 96px; font-weight: 800; line-height: 1; color: var(--accent); }
+  .rating-label { margin-top: 12px; font-size: 15px; color: var(--text); font-weight: 600; }
+  .rating-sub { margin-top: 6px; font-size: 14px; color: var(--muted); }
+  .stars { margin-top: 18px; color: var(--accent-2); letter-spacing: 4px; font-size: 20px; }
+  @media (max-width: 800px) { .about-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+  /* ---------- menu ---------- */
+  .menu-note {
+    display: inline-block; font-size: 13px; color: var(--muted);
+    border: 1px dashed var(--line); padding: 8px 14px; border-radius: 10px; margin-bottom: 40px;
+  }
+  .menu-groups { display: grid; grid-template-columns: repeat(2, 1fr); gap: 26px; }
+  @media (max-width: 800px) { .menu-groups { grid-template-columns: 1fr; } }
+  .menu-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+    padding: 30px 30px 24px;
+    transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+  }
+  .menu-card:hover { transform: translateY(-6px); border-color: rgba(232,146,90,.55); box-shadow: 0 20px 40px rgba(0,0,0,.35); }
+  .menu-card h3 { font-size: 20px; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+  .menu-card h3::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .menu-item {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+    padding: 12px 0; border-bottom: 1px dashed var(--line); font-size: 15px;
+  }
+  .menu-item:last-child { border-bottom: none; }
+  .menu-item .dots { flex: 1; border-bottom: 1px dotted #444; transform: translateY(-4px); }
+  .menu-item .price { color: var(--accent-2); font-weight: 600; white-space: nowrap; }
+  .menu-item small { display: block; color: var(--muted); font-size: 12px; }
+
+  /* ---------- hours & contacts ---------- */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  @media (max-width: 800px) { .contact-grid { grid-template-columns: 1fr; } }
+  .info-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 34px;
+    transition: transform .35s ease, border-color .35s ease;
+  }
+  .info-card:hover { transform: translateY(-6px); border-color: rgba(232,146,90,.55); }
+  .info-card h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .25em; color: var(--accent); margin-bottom: 14px; }
+  .info-card p, .info-card a { font-size: 19px; color: var(--text); }
+  .info-card .muted { color: var(--muted); font-size: 15px; margin-top: 6px; display: block; }
+  .hours-row { display: flex; justify-content: space-between; font-size: 17px; padding: 6px 0; }
+  .hours-row span:last-child { color: var(--accent-2); font-weight: 600; }
+
+  .wa-btn {
+    margin-top: 26px; width: 100%; justify-content: center;
+    background: #25d366; color: #0b1f11; font-size: 16px; padding: 18px;
+  }
+  .wa-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(37,211,102,.28); }
+
+  footer {
+    padding: 40px 6%; text-align: center; color: var(--muted); font-size: 13px;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal, .stagger > * { opacity: 1; transform: none; }
+    .splash { display: none; }
+    .eyebrow, .hero h1, .tagline, .hero-cta { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow" aria-hidden="true"></div>
+
+<div class="splash" id="splash" aria-hidden="true">
+  <div class="splash-name">
+    <span>G</span><span>R</span><span>A</span><span>F</span><span>I</span><span>T</span>
+  </div>
+  <div class="splash-line"></div>
+  <div class="splash-sub">кафе, Хромтау</div>
+</div>
+
+<nav>
+  <div class="brand">GRAF<em>I</em>T</div>
+  <div class="nav-links">
+    <a href="#about">Біз туралы</a>
+    <a href="#menu">Мәзір</a>
+    <a href="#contacts">Байланыс</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">Хромтау · Юрия Гагарина 35</div>
+  <h1>GRAFIT</h1>
+  <p class="tagline">Жайлы кафе. Дәмді тағам. Әр күн үшін.</p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="#menu">Мәзірді көру</a>
+    <a class="btn btn-ghost" href="https://wa.me/77074400009" target="_blank" rel="noopener">WhatsApp жазу</a>
+  </div>
+</header>
+
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <div class="kicker">Біз туралы</div>
+      <div class="section-head" style="margin-bottom:28px">
+        <h2>Хромтаудағы жайлы кафе</h2>
+      </div>
+      <p>GRAFIT. Хромтаудың орталығында, Юрия Гагарина 35 мекенжайындағы кафе. Қонақтар бізді 2GIS-те <strong>4.9</strong> бағамен бағалайды, пікір саны — <strong>244</strong>.</p>
+      <p>Біз үйдегідей жылы атмосфераны, тез қызмет пен жаңа дайындалған тағамды бірінші орынға қоямыз. Кешкі сағат 24:00-ге дейін ашықпыз, демалуға да, достармен кездесуге де ыңғайлы.</p>
+    </div>
+    <div class="rating-card reveal">
+      <div class="rating-num">4.9</div>
+      <div class="stars">★★★★★</div>
+      <div class="rating-label">2GIS рейтингі</div>
+      <div class="rating-sub">244 пікір</div>
+    </div>
+  </div>
+</section>
+
+<section id="menu">
+  <div class="section-head reveal">
+    <div class="kicker">Мәзір</div>
+    <h2>Тағамдар мен сусындар</h2>
+  </div>
+  <div class="menu-note reveal">үлгі бағалар — нақты бағалар кейінірек</div>
+
+  <div class="menu-groups stagger">
+    <div class="menu-card">
+      <h3>Негізгі тағамдар</h3>
+      <div class="menu-item"><span>Бешбармақ</span><span class="dots"></span><span class="price">3 500 ₸</span></div>
+      <div class="menu-item"><span>Ет тағамы (үлгі)</span><span class="dots"></span><span class="price">2 900 ₸</span></div>
+      <div class="menu-item"><span>Лагман</span><span class="dots"></span><span class="price">2 400 ₸</span></div>
+      <div class="menu-item"><span>Плов</span><span class="dots"></span><span class="price">2 200 ₸</span></div>
+    </div>
+    <div class="menu-card">
+      <h3>Шашлық және закуска</h3>
+      <div class="menu-item"><span>Шашлық (1 шампур)</span><span class="dots"></span><span class="price">800 ₸</span></div>
+      <div class="menu-item"><span>Самса (2 дана)</span><span class="dots"></span><span class="price">900 ₸</span></div>
+      <div class="menu-item"><span>Ірімшік тақтасы</span><span class="dots"></span><span class="price">1 600 ₸</span></div>
+      <div class="menu-item"><span>Нан себеті</span><span class="dots"></span><span class="price">500 ₸</span></div>
+    </div>
+    <div class="menu-card">
+      <h3>Сусындар</h3>
+      <div class="menu-item"><span>Қара шай (піала)</span><span class="dots"></span><span class="price">400 ₸</span></div>
+      <div class="menu-item"><span>Көк шай (үлкен чайник)</span><span class="dots"></span><span class="price">1 200 ₸</span></div>
+      <div class="menu-item"><span>Айран</span><span class="dots"></span><span class="price">600 ₸</span></div>
+      <div class="menu-item"><span>Кофе эспрессо</span><span class="dots"></span><span class="price">800 ₸</span></div>
+    </div>
+    <div class="menu-card">
+      <h3>Десерттер</h3>
+      <div class="menu-item"><span>Чизкейк</span><span class="dots"></span><span class="price">1 400 ₸</span></div>
+      <div class="menu-item"><span>Баурсақ (үлгі)</span><span class="dots"></span><span class="price">700 ₸</span></div>
+      <div class="menu-item"><span>Фруктовый салат</span><span class="dots"></span><span class="price">1 100 ₸</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="contacts">
+  <div class="section-head reveal">
+    <div class="kicker">Байланыс</div>
+    <h2>Бізге келіңіз</h2>
+  </div>
+  <div class="contact-grid stagger">
+    <div class="info-card">
+      <h3>Мекенжай</h3>
+      <p>Юрия Гагарина 35</p>
+      <span class="muted">Хромтау, Ақтөбе облысы</span>
+      <p style="margin-top:22px"><a href="tel:+77074400009">+7 707 440 0009</a></p>
+      <a class="btn wa-btn" href="https://wa.me/77074400009" target="_blank" rel="noopener">WhatsApp-қа жазу</a>
+    </div>
+    <div class="info-card">
+      <h3>Жұмыс уақыты</h3>
+      <div class="hours-row"><span>Күн сайын</span><span>11:00 to 24:00</span></div>
+      <span class="muted" style="margin-top:14px">Брондау және сұрақтар үшін WhatsApp-қа жазыңыз.</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2026 GRAFIT, Хромтау, Юрия Гагарина 35
+</footer>
+
+<script>
+  // Intro splash: hide after the name reveal
+  window.addEventListener('load', () => {
+    setTimeout(() => document.getElementById('splash').classList.add('hide'), 2300);
+  });
+
+  // Scroll reveals
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal, .stagger').forEach((el) => io.observe(el));
+</script>
+</body>
+</html>
